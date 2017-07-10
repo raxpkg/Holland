@@ -1,0 +1,131 @@
+pipeline:
+  build:
+    image: registry.pkgdev.rackspace.com/build-base:${DIST}
+    commands:
+      #install build-deps
+      - apt-get update
+      - echo "yes" | mk-build-deps --install --remove debian/control
+      #set up the upstream branch - has to be orphan so the git archive is pure.
+      - git checkout --orphan upstream
+      - git reset --hard
+      #add the upstream
+      - git remote add upstream https://github.com/holland-backup/holland.git
+      - git fetch -t upstream
+      - git archive v1.0.14 -o ../holland_1.0.14.orig.tar.gz
+      #using it's tarball to play well with .gitexports
+      - tar -zxf ../holland_1.0.14.orig.tar.gz
+      #execute the build
+      - git checkout $DRONE_COMMIT -- debian
+      - debuild -us -uc
+      - cd ..
+      - rename "s/(.*)-(.*)\.deb/\1-${DIST}\2.deb/" *.deb
+      
+  upload-base:
+    image: registry.pkgdev.rackspace.com/daf:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: ../holland_1.0.14-${DIST}1_all.deb
+    when:
+      event: tag
+    
+  register-base:
+    image: registry.pkgdev.rackspace.com/dar:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: holland_1.0.14-${DIST}1_all.deb
+    dist: ${DIST}
+    when:
+      event: tag
+    
+  upload-common:
+    image: registry.pkgdev.rackspace.com/daf:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: ../holland-common_1.0.14-${DIST}1_all.deb
+    when:
+      event: tag
+    
+  register-common:
+    image: registry.pkgdev.rackspace.com/dar:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: holland-common_1.0.14-${DIST}1_all.deb
+    dist: ${DIST}
+    when:
+      event: tag
+
+  upload-mysqldump:
+    image: registry.pkgdev.rackspace.com/daf:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: ../holland-mysqldump_1.0.14-${DIST}1_all.deb
+    when:
+      event: tag
+    
+  register-mysqldump:
+    image: registry.pkgdev.rackspace.com/dar:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: holland-mysqldump_1.0.14-${DIST}1_all.deb
+    dist: ${DIST}
+    when:
+      event: tag
+    
+  upload-mysqllvm:
+    image: registry.pkgdev.rackspace.com/daf:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: ../holland-mysqllvm_1.0.14-${DIST}1_all.deb
+    when:
+      event: tag
+    
+  register-mysqllvm:
+    image: registry.pkgdev.rackspace.com/dar:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: holland-mysqllvm_1.0.14-${DIST}1_all.deb
+    dist: ${DIST}
+    when:
+      event: tag
+    
+  upload-pgdump:
+    image: registry.pkgdev.rackspace.com/daf:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: ../holland-pgdump_1.0.14-${DIST}1_all.deb
+    when:
+      event: tag
+    
+  register-pgdump:
+    image: registry.pkgdev.rackspace.com/dar:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: holland-pgdump_1.0.14-${DIST}1_all.deb
+    dist: ${DIST}
+    when:
+      event: tag
+    
+  upload-xtrabackup:
+    image: registry.pkgdev.rackspace.com/daf:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: ../holland-xtrabackup_1.0.14-${DIST}1_all.deb
+    when:
+      event: tag
+    
+  register-xtrabackup:
+    image: registry.pkgdev.rackspace.com/dar:dev
+    aptlyurl: beast-internal.pkgdev.rackspace.com
+    repo: common
+    filename: holland-xtrabackup_1.0.14-${DIST}1_all.deb
+    dist: ${DIST}
+    when:
+      event: tag
+    
+matrix:
+  DIST:
+    - xenial
+    - trusty
+    - debian-jessie
+    - debian-stretch
+    - debian-sid

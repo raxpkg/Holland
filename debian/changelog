@@ -1,0 +1,32 @@
+holland (1.0.14-1) Stable; urgency=medium
+
+  * Bumping to version 1.0.14
+
+ -- Brandon Tomlinson <brandon.tomlinson@rackspace.com>  Thu, 17 Nov 2016 21:01:05 +0000
+
+holland (1.0.12-1) unstable; urgency=medium
+
+  * Bumping to version 1.0.12 
+
+ -- Brandon Tomlinson <brandon.tomlinson@rackspace.com>  Wed, 03 Aug 2016 15:51:32 +0000
+
+holland (1.0.10-2) unstable; urgency=low
+
+  [ Andrew Garner ]
+  * Fix .deb dependency on mysql-client; Use virtual-mysql-client instead
+
+ -- Andrew Garner <muzazzi@gmail.com>  Fri, 02 May 2013 23:16:34 +0000
+
+holland (1.0.10-1) unstable; urgency=low
+
+  [ Andrew Garner ]
+  * New upstream release
+
+ -- Andrew Garner <muzazzi@gmail.com>  Mon, 29 Jul 2013 23:16:34 +0000
+
+holland (1.0.8-1) unstable; urgency=low
+
+  [ Andrew Garner ]
+  * New upstream release
+
+ -- Andrew Garner <muzazzi@gmail.com>  Fri, 11 Jan 2013 16:37:42 +0000
